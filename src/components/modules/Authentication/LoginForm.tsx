@@ -22,18 +22,32 @@ export function LoginForm({
   const form = useForm();
   const [login] = useLoginMutation();
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    try {
-      const res = await login(data).unwrap();
-      console.log(res);
-    } catch (err) {
-      console.error(err);
+  try {
+    const res = await login(data).unwrap();
+    console.log(res);
+  } catch (err) {
+    console.error(err);
 
-      if (err.status === 401) {
+    // Type narrowing for FetchBaseQueryError
+    if (
+      typeof err === "object" &&
+      err !== null &&
+      "status" in err &&
+      typeof err.status === "number"
+    ) {
+      const status = err.status as number;
+
+      if (status === 401) {
         toast.error("Your account is not verified");
         navigate("/verify", { state: data.email });
+      } else {
+        toast.error("Login failed. Please try again.");
       }
+    } else {
+      toast.error("An unknown error occurred.");
     }
-  };
+  }
+};
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
