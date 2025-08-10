@@ -8,10 +8,10 @@ import { createBrowserRouter } from "react-router";
 
 export const router = createBrowserRouter([
   {
-    path: "/",
     Component: App,
+    path: "/",
     children: [
-      {
+            {
         Component: Home,
         path: "/"
       },
@@ -20,7 +20,6 @@ export const router = createBrowserRouter([
         path: "home"
       },
       {
-    
         Component: About,
         path: "about",
       },
