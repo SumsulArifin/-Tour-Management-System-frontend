@@ -1,14 +1,9 @@
-import { useUserInfoQuery } from "@/redux/features/auth/auth.api";
-
+import HeroSection from "@/components/modules/HomePage/HeroSection";
 export default function Home() {
-  const { data } = useUserInfoQuery(undefined);
 
   return (
-    <>
-      {
-        data?.data?.email &&
-        <h1 className="text-center">Hello {data?.data?.email} Welcome </h1>
-      }
-    </>
+  <div>
+      <HeroSection />
+    </div>
   );
 }

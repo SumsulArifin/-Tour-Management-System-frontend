@@ -60,6 +60,8 @@ export default function Verify() {
 
     try {
       const res = await sendOtp({ email: email }).unwrap();
+      console.log(email);
+      
 
       if (res.success) {
         toast.success("OTP Sent", { id: toastId });

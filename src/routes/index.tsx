@@ -12,6 +12,9 @@ import { createBrowserRouter, Navigate } from "react-router";
 import { adminSidebarItems } from "./adminSidebarItems";
 import { userSidebarItems } from "./userSidebarItems";
 import { withAuth } from "@/utils/withAuth";
+import Tours from "@/pages/Tours";
+import TourDetails from "@/pages/TourDetails";
+import Booking from "@/pages/Booking";
 
 export const router = createBrowserRouter([
   {
@@ -20,15 +23,24 @@ export const router = createBrowserRouter([
     children: [
             {
         Component: Home,
-        path: "/"
+        index:true,
       },
-      {
-        Component: Home,
-        path: "home"
-      },
+    
       {
         Component: About,
         path: "about",
+      },
+        {
+        Component: Tours,
+        path: "tours",
+      },
+      {
+        Component: TourDetails,
+        path: "tours/:id",
+      },
+      {
+        Component: withAuth(Booking),
+        path: "booking/:id",
       },
     ],
   },
