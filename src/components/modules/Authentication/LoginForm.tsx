@@ -11,7 +11,6 @@ import { Input } from "@/components/ui/input";
 import config from "@/config";
 import { cn } from "@/lib/utils";
 import { useLoginMutation } from "@/redux/features/auth/auth.api";
-import axios from "axios";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
@@ -25,31 +24,30 @@ export function LoginForm({
   const [login] = useLoginMutation();
 const onSubmit: SubmitHandler<FieldValues> = async (data) => {
   try {
-    const res = await login(data); // No unwrap here since it's axios
+    // login mutation returns the actual response body
+    const res = await login(data).unwrap();
 
-    if (res.data.success) {
+    if (res.success) {
       toast.success("Logged in successfully");
       navigate("/");
     }
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
 
-    if (axios.isAxiosError(err)) {
-      const message = err.response?.data?.message;
+    // Check RTK Query error
+    const message = err?.data?.message;
 
-      if (message === "Password does not match") {
-        toast.error("Invalid credentials");
-      }
-
-      if (message === "User is not verified") {
-        toast.error("Your account is not verified");
-        navigate("/verify", { state: data.email });
-      }
+    if (message === "Password does not match") {
+      toast.error("Invalid credentials");
+    } else if (message === "User is not verified") {
+      toast.error("Your account is not verified");
+      navigate("/verify", { state: data.email });
     } else {
       toast.error("Something went wrong");
     }
   }
 };
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <div className="flex flex-col items-center gap-2 text-center">

@@ -26,6 +26,11 @@ const registerSchema = z
         error: "Name is too short",
       })
       .max(50),
+    phone: z
+      .string()
+      .min(10, { message: "Phone number is too short" })
+      .max(15, { message: "Phone number is too long" }),
+    address: z.string().min(5, { message: "Address is too short" }),
     email: z.email(),
     password: z.string().min(8, { error: "Password is too short" }),
     confirmPassword: z
@@ -48,6 +53,8 @@ export function RegisterForm({
     resolver: zodResolver(registerSchema),
     defaultValues: {
       name: "",
+      phone: "",
+      address: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -57,6 +64,8 @@ export function RegisterForm({
   const onSubmit = async (data: z.infer<typeof registerSchema>) => {
     const userInfo = {
       name: data.name,
+      phone: data.phone,
+      address: data.address,
       email: data.email,
       password: data.password,
     };
@@ -65,7 +74,7 @@ export function RegisterForm({
       const result = await register(userInfo).unwrap();
       console.log(result);
       toast.success("User created successfully");
-      navigate("/verify");
+      navigate("/verify", { state: data.email });
     } catch (error) {
       console.error(error);
     }
@@ -95,6 +104,33 @@ export function RegisterForm({
                   <FormDescription className="sr-only">
                     This is your public display name.
                   </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone</FormLabel>
+                  <FormControl>
+                    <Input placeholder="01XXXXXXXXX" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="address"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Address</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Your address" {...field} />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

@@ -46,8 +46,16 @@ export const tourApi = baseApi.injectEndpoints({
       providesTags: ["TOUR"],
       transformResponse: (response:IResponse<ITourPackage[]>) => response.data,
     }),
+      getMostAllTour: builder.query<ITourPackage[],unknown>({
+      query: () => ({
+        url: "/tour",
+        method: "GET",
+      }),
+      providesTags: ["TOUR"],
+      transformResponse: (response:IResponse<ITourPackage[]>) => response.data,
+    }),
 
   }),
 });
 
-export const { useGetTourTypesQuery, useAddTourTypeMutation, useRemoveTourTypeMutation,useAddTourMutation ,useGetAllTourQuery} = tourApi;
+export const { useGetTourTypesQuery, useAddTourTypeMutation, useRemoveTourTypeMutation,useAddTourMutation ,useGetAllTourQuery,useGetMostAllTourQuery } = tourApi;

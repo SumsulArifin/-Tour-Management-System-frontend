@@ -30,7 +30,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Dot } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import z from "zod";
 
@@ -41,8 +41,17 @@ const FormSchema = z.object({
 });
 
 export default function Verify() {
-  const location = useLocation();
-  const [email] = useState(location.state);
+
+ const location = useLocation(); 
+const navigate = useNavigate();
+const [email] = useState(location.state as string);
+
+useEffect(() => {
+  if (!email) {
+    // যদি email না আসে তাহলে home এ redirect করো
+    navigate("/");
+  }
+}, [email, navigate]);
   const [confirmed, setConfirmed] = useState(false);
   const [sendOtp] = useSendOtpMutation();
   const [verifyOtp] = useVerifyOtpMutation();
@@ -57,12 +66,9 @@ export default function Verify() {
 
   const handleSendOtp = async () => {
     const toastId = toast.loading("Sending OTP");
-
     try {
       const res = await sendOtp({ email: email }).unwrap();
       console.log(email);
-      
-
       if (res.success) {
         toast.success("OTP Sent", { id: toastId });
         setConfirmed(true);
@@ -85,6 +91,7 @@ export default function Verify() {
       if (res.success) {
         toast.success("OTP Verified", { id: toastId });
         setConfirmed(true);
+        navigate("/login");
       }
     } catch (err) {
       console.log(err);

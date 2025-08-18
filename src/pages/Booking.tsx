@@ -4,6 +4,7 @@ import { useCreateBookingMutation } from "@/redux/features/booking/booking.api";
 import { useGetAllTourQuery } from "@/redux/features/Tour/tour.api";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { format } from "date-fns";
 
 export default function Booking() {
   const [guestCount, setGuestCount] = useState(1);
@@ -90,9 +91,23 @@ export default function Booking() {
                   <strong>Location:</strong> {tourData?.location}
                 </div>
                 <div>
+                  <strong>Duration: </strong>
+                   {format(
+                    new Date(
+                      tourData?.startDate ? tourData?.startDate : new Date()
+                    ),
+                    "PP"
+                  )}{" "}
+                  to{" "}{" "}
+                  {format(
+                    new Date(tourData?.endDate ? tourData?.endDate : new Date()),
+                    "PP"
+                  )}
+                </div>
+                {/* <div>
                   <strong>Duration:</strong> {tourData?.startDate} to{" "}
                   {tourData?.endDate}
-                </div>
+                </div> */}
                 <div>
                   <strong>Tour Type:</strong> {tourData?.tourType}
                 </div>
